@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema shopping-cart
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `shopping-cart` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `shopping-cart` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `shopping-cart` ;
 
 -- -----------------------------------------------------
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`product` (
   PRIMARY KEY (`pid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
@@ -39,23 +39,25 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `shopping-cart`.`orders` ;
 
 CREATE TABLE IF NOT EXISTS `shopping-cart`.`orders` (
-  `orderid` VARCHAR(45) NOT NULL,
-  `prodid` VARCHAR(45) NOT NULL,
-  `quantity` INT NULL DEFAULT NULL,
-  `amount` DECIMAL(10,2) NULL DEFAULT NULL,
-  `shipped` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`orderid`, `prodid`),
-  INDEX `productid_idx` (`prodid` ASC) VISIBLE,
-  CONSTRAINT `productid`
-    FOREIGN KEY (`prodid`)
-    REFERENCES `shopping-cart`.`product` (`pid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    `orderid` VARCHAR(45) NOT NULL,
+    `prodid` VARCHAR(45) NOT NULL,
+    `quantity` INT NULL DEFAULT NULL,
+    `amount` DECIMAL(10,2) NULL DEFAULT NULL,
+    `shipped` INT NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (`orderid`, `prodid`),
+
+    INDEX `productid_idx` (`prodid` ASC),
+
+    CONSTRAINT `productid`
+        FOREIGN KEY (`prodid`)
+        REFERENCES `shopping-cart`.`product` (`pid`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
+COLLATE = utf8mb4_unicode_ci;
 -- -----------------------------------------------------
 -- Table `shopping-cart`.`user`
 -- -----------------------------------------------------
@@ -71,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`user` (
   PRIMARY KEY (`email`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
@@ -80,26 +82,30 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `shopping-cart`.`transactions` ;
 
 CREATE TABLE IF NOT EXISTS `shopping-cart`.`transactions` (
-  `transid` VARCHAR(45) NOT NULL,
-  `username` VARCHAR(60) NULL DEFAULT NULL,
-  `time` DATETIME NULL DEFAULT NULL,
-  `amount` DECIMAL(10,2) NULL DEFAULT NULL,
-  PRIMARY KEY (`transid`),
-  INDEX `truserid_idx` (`username` ASC) VISIBLE,
-  CONSTRAINT `truserid`
-    FOREIGN KEY (`username`)
-    REFERENCES `shopping-cart`.`user` (`email`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `transorderid`
-    FOREIGN KEY (`transid`)
-    REFERENCES `shopping-cart`.`orders` (`orderid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    `transid` VARCHAR(45) NOT NULL,
+    `username` VARCHAR(60) NULL DEFAULT NULL,
+    `time` DATETIME NULL DEFAULT NULL,
+    `amount` DECIMAL(10,2) NULL DEFAULT NULL,
+
+    PRIMARY KEY (`transid`),
+
+    INDEX `truserid_idx` (`username` ASC),
+
+    CONSTRAINT `truserid`
+        FOREIGN KEY (`username`)
+        REFERENCES `shopping-cart`.`user` (`email`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+
+    CONSTRAINT `transorderid`
+        FOREIGN KEY (`transid`)
+        REFERENCES `shopping-cart`.`orders` (`orderid`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
+COLLATE = utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `shopping-cart`.`user_demand`
@@ -111,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`user_demand` (
   `prodid` VARCHAR(45) NOT NULL,
   `quantity` INT NULL DEFAULT NULL,
   PRIMARY KEY (`username`, `prodid`),
-  INDEX `prodid_idx` (`prodid` ASC) VISIBLE,
+  INDEX `prodid_idx` (`prodid` ASC),
   CONSTRAINT `userdemailemail`
     FOREIGN KEY (`username`)
     REFERENCES `shopping-cart`.`user` (`email`)
@@ -124,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`user_demand` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
@@ -136,8 +142,8 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`usercart` (
   `username` VARCHAR(60) NULL DEFAULT NULL,
   `prodid` VARCHAR(45) NULL DEFAULT NULL,
   `quantity` INT NULL DEFAULT NULL,
-  INDEX `useremail_idx` (`username` ASC) VISIBLE,
-  INDEX `prodidcart_idx` (`prodid` ASC) VISIBLE,
+  INDEX `useremail_idx` (`username` ASC),
+  INDEX `prodidcart_idx` (`prodid` ASC),
   CONSTRAINT `useremail`
     FOREIGN KEY (`username`)
     REFERENCES `shopping-cart`.`user` (`email`)
@@ -150,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`usercart` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
